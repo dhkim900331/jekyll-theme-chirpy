@@ -8,17 +8,20 @@ author: DongHyun Kim
 
 ---
 **Contents**
+* TOC
 {:toc}
 ---
 
 ---
 # 1. 개요
 WebLogic UDDI Explorer 보안 취약점 제거 방법을 소개한다.
+
 ---
 
 ---
 # 2. UDDI Explorer ?
-UDDI Explorer는 WebService 를 구현하실 때 편의를 위해 제공하는 라이브러리
+UDDI Explorer는 WebService 를 구현하실 때 편의를 위해 제공하는 라이브러리.
+
 ---
 
 ---
