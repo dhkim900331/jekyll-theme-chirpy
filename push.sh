@@ -16,4 +16,3 @@ git config --global user.name "dhkim900331"
 git add .
 git commit -m "[${LOG_TIME}] ${TITLE}"
 git push origin master
-#
