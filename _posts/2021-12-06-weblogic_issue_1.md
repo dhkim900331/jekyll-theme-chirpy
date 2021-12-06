@@ -58,17 +58,6 @@ DB를 insert,delete,update 등으로 사용자가 점유하고 있으면, table 
 
 
 
-{% mermaid %}
-
-graph LR;
-	WebLogic --> JTA[JTA Timeout];
-	JTA --> XA[XA Timeout];
-	XA --> DB[DB Lockout Timeout];
-
-%{ endmermaid %}
-
-
-
 ```mermaid
 graph LR
 WebLogic --> JTA[JTA Timeout]
