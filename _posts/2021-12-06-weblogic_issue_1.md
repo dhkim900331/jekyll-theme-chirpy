@@ -53,8 +53,12 @@ _DB를 insert,delete,update 등으로 사용자가 점유하고 있으면, table
 웹로직 에서 DB까지의 흐름을 보면
 
 <div class="mermaid">
-    graph LR; WebLogic --> JTA[JTA Timeout]; JTA --> XA[XA Timeout]; XA --> DB[DB Lockout Timeout];
+    graph LR;
+    WebLogic --> JTA[JTA Timeout];
+    JTA --> XA[XA Timeout];
+    XA --> DB[DB Lockout Timeout];
 </div>
+
 
 >  JTA timeout : 웹로직에서 트랜잭션 전체 크기에 해당하는 time만큼 지정해야 한다. 클라이언트가 결과를 받을 때까지를 의미하기 때문에, DB단까지 포함해야 한다.
 
