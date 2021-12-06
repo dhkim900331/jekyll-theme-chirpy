@@ -1,8 +1,8 @@
 ---
 title: "[WebLogic] WLDF (건강보험공단 차세대그룹웨어 기준으로 정리)"
 date: 2021-12-06 00:00:00 +0900
-categories: [WebLogic, issue]
-tags: [WebLogic, issue, WLDF]
+categories: [WebLogic, Issues]
+tags: [WebLogic, Issues, WLDF]
 author: DongHyun Kim
 
 ---

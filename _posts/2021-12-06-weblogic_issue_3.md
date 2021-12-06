@@ -1,8 +1,8 @@
 ---
 title: "[WebLogic] 금융권 MultiDataSource 이슈 사례"
 date: 2021-12-06 00:00:00 +0900
-categories: [WebLogic, issue]
-tags: [WebLogic, issue, MultiDataSource]
+categories: [WebLogic, Issues]
+tags: [WebLogic, Issues, MultiDataSource]
 author: DongHyun Kim
 
 ---

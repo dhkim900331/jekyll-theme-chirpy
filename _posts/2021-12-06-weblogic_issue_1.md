@@ -1,8 +1,8 @@
 ---
 title: "[WebLogic] XAConnection java.sql.SQLException: XA error: XAResource.XAER_RMFAIL start() failed"
 date: 2021-12-06 00:00:00 +0900
-categories: [WebLogic, issue]
-tags: [WebLogic, issue, XAConnection, SQLException]
+categories: [WebLogic, Issues]
+tags: [WebLogic, Issues, XAConnection, SQLException]
 author: DongHyun Kim
 
 ---
