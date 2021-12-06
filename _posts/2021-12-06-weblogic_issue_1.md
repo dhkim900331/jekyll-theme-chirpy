@@ -56,15 +56,6 @@ DB를 insert,delete,update 등으로 사용자가 점유하고 있으면, table 
     graph LR; WebLogic --> JTA[JTA Timeout]; JTA --> XA[XA Timeout]; XA --> DB[DB Lockout Timeout];
 </div>
 
-
-
-```mermaid
-graph LR
-WebLogic --> JTA[JTA Timeout]
-JTA --> XA[XA Timeout]
-XA --> DB[DB Lockout Timeout]
-```
-
 JTA timeout : 웹로직에서 트랜잭션 전체 크기에 해당하는 time만큼 지정해야 한다. 클라이언트가 결과를 받을 때까지를 의미하기 때문에, DB단까지 포함해야 한다.
 
 XA timeout : XA 로직 실행 타임아웃.
