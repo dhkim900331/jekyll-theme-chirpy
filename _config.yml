@@ -170,7 +170,3 @@ jekyll-archives:
   permalinks:
     tag: /tags/:name/
     category: /categories/:name/
-
-gems: [jekyll-mermaid]
-mermaid:
-  src: /assets/js/mermaid.min.js
