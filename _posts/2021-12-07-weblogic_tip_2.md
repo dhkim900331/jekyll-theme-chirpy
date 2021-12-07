@@ -1,5 +1,5 @@
 ---
-title: "[WLST] Thread Dump"
+title: "[WebLogic] WLST으로 Thread Dump"
 categories: [WAS, WebLogic]
 tags: [WebLogic, Tips]
 author: DongHyun Kim
