@@ -1,7 +1,7 @@
 ---
 title: "[WebLogic] UDDI Explorer 보안 취약점"
 date: 2021-12-04 00:00:00 +0900
-categories: [WebLogic, Issues]
+categories: [WAS, WebLogic]
 tags: [WebLogic, Issues, UDDI, Explorer]
 author: DongHyun Kim
 ---
@@ -12,19 +12,15 @@ author: DongHyun Kim
 {:toc}
 ---
 
----
+
 # 1. 개요
 WebLogic UDDI Explorer 보안 취약점 제거 방법을 소개한다.
 
----
 
----
 # 2. UDDI Explorer ?
 UDDI Explorer는 WebService 를 구현하실 때 편의를 위해 제공하는 라이브러리.
 
----
 
----
 # 3. UDDI Explorer 제거 방법
 UDDI Explorer는 WebService 를 구현하실 때 편의를 위해 제공하는 라이브러리로
 따로 API를 가지고 구현해서 사용하지 않으시면 해당 라이브러리를 삭제하셔도 됩니다.
@@ -40,9 +36,8 @@ UDDI Explorer는 WebService 를 구현하실 때 편의를 위해 제공하는 �
 4. Remove the two folders under <DOMAIN_HOME>/servers/<SERVER_NAME>/tmp/_WL_internal/uddi*;
 5. Restart the WLS admin server You should see warning messages like these in your startup log (and/or sysout):.
 ```
----
 
----
+
 # 4. 정상 적으로 제거 하였는지 확인 방법
 로그상에 다음과 같은 메시지가 떠야 정상적으로 disable 설정됨.
 ```
@@ -50,4 +45,3 @@ UDDI Explorer는 WebService 를 구현하실 때 편의를 위해 제공하는 �
 
 <Nov 07, 2011 3:02:31 PM EST> <Warning> <Deployer> <BEA-149617> <Non-critical internal application uddiexplorer was not deployed. Error: [Deployer:149158]No application files exist at 'C:\Oracle\Middleware\wls103\WEBLOG~1\server\lib\uddiexplorer.war'.>
 ```
----
