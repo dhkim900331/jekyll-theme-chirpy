@@ -3,7 +3,7 @@ title: "[WebLogic] weblogic.socket.muxer is blocked"
 categories: [WAS, WebLogic]
 tags: [WebLogic, Issues]
 author: DongHyun Kim
-date:%{TITLE_LOG_TIME} %{HEAD_LOG_TIME}
+date:2021-12-07 12:25:18 +0900
 ---
 
 ---
