@@ -1,8 +1,8 @@
 ---
-title: "[1] 1"
-date: 2021-12-07 12:41:58 +0900
+title: "[] "
 categories: []
 tags: []
+date: 
 author: DongHyun Kim
 ---
 
@@ -19,5 +19,3 @@ author: DongHyun Kim
 
 
 # 3. 
-
-11111111111111111
