@@ -25,4 +25,3 @@ java -cp wlfullclient.jar weblogic.Admin -url t3://ip:port -username weblogic -p
 > nohup에 기록된다.
 >
 > wlfullclient.jar는 _https://docs.oracle.com/cd/E13222_01/wls/docs103/client/jarbuilder.html#wp1078098_ 를 참고하여 생성한다.
-
