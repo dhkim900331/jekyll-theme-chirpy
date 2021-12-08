@@ -4,6 +4,7 @@ categories: []
 tags: []
 date: 
 author: DongHyun Kim
+typora-root-url: ..
 ---
 
 ---
