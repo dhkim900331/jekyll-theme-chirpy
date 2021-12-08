@@ -81,6 +81,7 @@ Information: You may need to update /etc/fstab.
 ```
 
 > /dev/vdb 디스크를 GPT 라벨링
+>
 > _MBR일 경우 gpt -> msdos_
 
 
@@ -118,12 +119,16 @@ Information: You may need to update /etc/fstab.
 > /dev/vdb 에 최초 파티션을 생성하엿다.
 >
 > _파티션 명: backup_
-> _파티션 타입: xfs__
-> __파티션 크기: 2GB
-> 	ㄴ최초 파티션이므로, 가장 최소단위 1Sector 부터 2GB 까지 설정)
-> 	ㄴ"3.2" 에서 Sector size 를 알 수 있다._
 >
-> _MBR일 경우 backup -> primary(경우에 따라 extended)_
+> __파티션 타입: xfs__
+>
+> _파티션 크기: 2GB_
+>
+> ​	_ㄴ최초 파티션이므로, 가장 최소단위 1Sector 부터 2GB 까지 설정)_
+>
+> ​	_ㄴ"3.2" 에서 Sector size 를 알 수 있다.__
+>
+> __MBR일 경우 backup -> primary(경우에 따라 extended)_
 
 
 
@@ -140,6 +145,7 @@ Number  Start   End     Size    File system  Name    Flags
 ```
 
 > print의 결과를 보면, 원하는 대로 생성되어 있다.
+>
 > _1s = 512B 라 예상되지만, 시스템은 최소 크기가 17.4kB 인듯 하다_
 
 

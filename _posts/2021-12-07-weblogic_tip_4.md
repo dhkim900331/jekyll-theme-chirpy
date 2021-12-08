@@ -113,6 +113,7 @@ java -Dweblogic.security.TrustKeyStore=DemoTrust weblogic.Deployer -adminurl t3:
 administration port를 사용 중인 admin server 환경에서 어플리케이션의 오픈전 테스트를 위해 사용한다.
 
 ADMIN state 어플리케이션은 웹로직 'myrealm'에 허가된 유저&그룹만 접근가능한데,
+
 administration port를 사용하여 접근하는 행위가 허가된 유저&그룹 인증 절차이기 때문이다.
 
 
