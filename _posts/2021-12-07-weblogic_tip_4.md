@@ -37,7 +37,7 @@ Administration Port, Side-By-Side Deploy 기능을 알아보자.
 
 (3). https://ip : administration Port로 console을 재접속한다.
 
-![img]()
+![image-20211208104846847](../assets/img/2021-12-07-weblogic_tip_4/image-20211208104846847.png)
 
 
 
