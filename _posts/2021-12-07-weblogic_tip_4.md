@@ -4,6 +4,7 @@ categories: [WAS, WebLogic]
 tags: [WebLogic, Tips, Deploy]
 date: 2021-12-07 18:16:49 +0900
 author: DongHyun Kim
+typora-root-url: ..
 ---
 
 ---
@@ -37,7 +38,7 @@ Administration Port, Side-By-Side Deploy 기능을 알아보자.
 
 (3). https://ip : administration Port로 console을 재접속한다.
 
-![image-20211208104846847](../assets/img/2021-12-07-weblogic_tip_4/image-20211208104846847.png)
+![image-20211208114940336](/assets/img/2021-12-07-weblogic_tip_4/image-20211208114940336.png)
 
 
 
@@ -83,7 +84,7 @@ Configuration - General - Advanced - Local Administration Port Override : Admini
 java -Dweblogic.security.TrustKeyStore=DemoTrust weblogic.Deployer -adminurl t3://adminServer_Address -user weblogic -password weblogic1 -deploy -name webapp -source D:\weblogic\WLS1036\domains\dm1036\webapp -targets m1 -appversion v1
 ```
 
-![img]()
+![image-20211208115024350](/assets/img/2021-12-07-weblogic_tip_4/image-20211208115024350.png)
 
 > appversion 파라메터가 버전 관리를 위해 잘 관리해줘야 한다.
 
@@ -99,7 +100,7 @@ java -Dweblogic.security.TrustKeyStore=DemoTrust weblogic.Deployer -adminurl t3:
 java -Dweblogic.security.TrustKeyStore=DemoTrust weblogic.Deployer -adminurl t3://adminServer_Address -user weblogic -password weblogic1 -deploy -name webapp -source D:\weblogic\WLS1036\domains\dm1036\webapp -targets m1 -appversion v2
 ```
 
-![img]()
+![image-20211208115132034](/assets/img/2021-12-07-weblogic_tip_4/image-20211208115132034.png)
 
 > webapp(v1)은 아직 사용자가 있어서 stop Running... 다 빠져나가면 retired가 된다.
 >
@@ -120,8 +121,8 @@ administration port를 사용하여 접근하는 행위가 허가된 유저&그�
 java -Dweblogic.security.TrustKeyStore=DemoTrust weblogic.Deployer -adminurl t3s://adminServerIP:administrationPORT -user weblogic -password weblogic1 -adminmode -name webapp -deploy -upload -remote D:\weblogic\WLS1036\domains\dm1036\webapp
 ```
 
-![img]()
+![image-20211208115146483](/assets/img/2021-12-07-weblogic_tip_4/image-20211208115146483.png)
 
-![img]()
+![image-20211208115152060](/assets/img/2021-12-07-weblogic_tip_4/image-20211208115152060.png)
 
 > 위 커맨드 실행 결과가 remove Initializing 일 수 있다... admin server restart 하니 admin state이다...
