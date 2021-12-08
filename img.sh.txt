@@ -26,3 +26,5 @@ params: 2 /// 2021-12-07-weblogic_tip_4 /// C:\Users\USER\AppData\Roaming\Typora
 params: 2 /// 2021-12-07-weblogic_tip_4 /// D:\1.gitblog\dhkim900331.github.io\assets\img\2021-12-07-weblogic_tip_4\image-20211208104658970.png
 params: 2 /// 2021-12-07-weblogic_tip_4 /// 
 params: 2 /// 2021-12-07-weblogic_tip_4 /// D:\1.gitblog\dhkim900331.github.io\assets\img\2021-12-07-weblogic_tip_4\image-20211208104846847.png
+params: 2 /// 2021-12-07-weblogic_tip_4 /// D:\1.gitblog\dhkim900331.github.io\assets\img\2021-12-07-weblogic_tip_4\image-20211208105219913.png
+params: 2 /// 2021-12-07-weblogic_tip_4 /// D:\1.gitblog\dhkim900331.github.io\assets\img\2021-12-07-weblogic_tip_4\image-20211208105251482.png
