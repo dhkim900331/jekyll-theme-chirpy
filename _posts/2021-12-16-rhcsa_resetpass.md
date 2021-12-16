@@ -4,6 +4,7 @@ categories: [Study, RHCSA]
 tags: [Study, RHCSA]
 date: 2021-12-16 15:55:18 +0900
 author: DongHyun Kim
+typora-root-url: ..
 ---
 
 ---
@@ -22,7 +23,7 @@ root 계정 패스워드 변경 방법
 
 (1). Linux 부팅 단계에서 e 를 눌러 명령줄 편집모드 진입
 
-![](../assets/img/rhcsa_resetpass/image-20211209081730920.png)
+![](/assets/img/rhcsa_resetpass/image-20211209081730920.png)
 
 
 
@@ -40,7 +41,7 @@ root 계정 패스워드 변경 방법
 
 현재 sysroot가 ro(read only)다.
 
-![image-20211209082924852](../assets/img/rhcsa_resetpass/image-20211209082924852.png)
+![image-20211209082924852](/assets/img/rhcsa_resetpass/image-20211209082924852.png)
 
 
 
@@ -50,7 +51,7 @@ root 계정 패스워드 변경 방법
 # mount -o(options) remount,rw /sysroot
 ```
 
-![image-20211209083022990](../assets/img/rhcsa_resetpass/image-20211209083022990.png)
+![image-20211209083022990](/assets/img/rhcsa_resetpass/image-20211209083022990.png)
 
 
 
@@ -95,4 +96,4 @@ Re-type Password:
 
 (7). relabel 작업으로 보여지는 로그들
 
-![image-20211209083949074](../assets/img/rhcsa_resetpass/image-20211209083949074.png)
+![image-20211209083949074](/assets/img/rhcsa_resetpass/image-20211209083949074.png)
