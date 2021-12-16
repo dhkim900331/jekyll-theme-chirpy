@@ -1,6 +1,6 @@
 ---
 title: "[RHCSA] Swap 파티셔닝"
-categories: [Study, RHCSA, Swap]
+categories: [Study, RHCSA]
 tags: [Study, RHCSA, Swap, GPT, MBR, parted]
 date: 2021-12-07 21:05:50 +0900
 author: DongHyun Kim
