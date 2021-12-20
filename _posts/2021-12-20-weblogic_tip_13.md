@@ -104,7 +104,7 @@ for (int i=0; i < 3; i++)
 
 
 
-```찾은 결과
+```찾은결과
 "Thread-36" daemon prio=10 tid=0x00007f43d0059800 nid=0x581f runnable [0x00007f43cf8f7000]
    java.lang.Thread.State: RUNNABLE
      at java.lang.StrictMath.atan(Native Method)
@@ -172,7 +172,7 @@ for (int i=0; i < 3; i++)
 
 
 
-```찾은 결과
+```찾은결과
 "Thread-15" daemon prio=6 tid=0x0000000007729800 nid=0x219c runnable [0x000000000cdaf000]
    java.lang.Thread.State: RUNNABLE
      at java.lang.StrictMath.atan(Native Method)
@@ -215,7 +215,7 @@ for (int i=0; i < 3; i++)
 
 
 
-```위 명령의 결과
+```위명령의결과
     USER      PID     PPID        TID S  CP PRI SC    WCHAN        F     TT BND COMMAND
 
      cs2 16908684 17825820          - A 360  60 55        *   202001  pts/2   - /usr/java7_64/bin/java -Xms512m -Xmx512m -Dweblo
@@ -345,7 +345,7 @@ for (int i=0; i < 3; i++)
 
 
 
-```찾은 결과
+```찾은결과
 3XMTHREADINFO      "Thread-33" J9VMThread:0x00000000524AEB00, j9thread_t:0x00000100151EC5C0, java/lang/Thread:0x00000000498A4898, s
 
 tate:R, prio=5
