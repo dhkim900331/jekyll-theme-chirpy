@@ -21,7 +21,7 @@ Session을 생성하고 복제하는 Method (setAttribute, getAttribute, getSess
 
 # 2. Oracle 공식 문서 확인
 
-[여기]([http://docs.oracle.com/cd/E23943_01/web.1111/e13709/failover.htm#CLUST201](http://docs.oracle.com/cd/E23943_01/web.1111/e13709/failover.htm /l CLUST201)) 에서 Session Replocation Sync가 setAttribute method로 동작한다는 부분은 다음과 같습니다.
+[여기](http://docs.oracle.com/cd/E23943_01/web.1111/e13709/failover.htm /l CLUST201) 에서 Session Replocation Sync가 setAttribute method로 동작한다는 부분은 다음과 같습니다.
 
 > (setAttribute 로 검색시)
 
