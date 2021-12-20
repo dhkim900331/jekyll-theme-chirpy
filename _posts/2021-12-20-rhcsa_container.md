@@ -117,7 +117,7 @@ root@3c6ad1ea13e3:/usr/local/apache2# hostname
 
 > 컨테이너 내부로 접속하여 hostname 명령을 쳐보았다.
 
-#1
+
 
 # 3. 비-루트 계정 서비스 등록
 
@@ -164,12 +164,3 @@ root@3c6ad1ea13e3:/usr/local/apache2# hostname
 > myweb 컨테이너를 정지/삭제 하고,
 >
 > user 서비스를 재부팅 시 자동 시작되도록 및 지금 당장 시작하도록 설정한다.
-
-
-
-
-
-
-
-[여기](#1)
-
