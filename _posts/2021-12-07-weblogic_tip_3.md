@@ -1,7 +1,7 @@
 ---
 title: "[WebLogic] JMX MBean 사용을 위한 기초 개념"
 categories: [WAS, WebLogic]
-tags: [WebLogic, Tips, MBean, JMX]
+tags: [WAS, WebLogic, MBean, JMX]
 date: 2021-12-07 18:16:49 +0900
 author: DongHyun Kim
 ---

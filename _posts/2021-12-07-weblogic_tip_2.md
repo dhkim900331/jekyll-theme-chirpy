@@ -1,7 +1,7 @@
 ---
 title: "[WebLogic] WLST으로 Thread Dump"
 categories: [WAS, WebLogic]
-tags: [WebLogic, Tips]
+tags: [WAS, WebLogic, WLST, ThreadDump]
 author: DongHyun Kim
 date: 2021-12-07 15:34:11 +0900
 ---

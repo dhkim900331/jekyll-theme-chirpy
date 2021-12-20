@@ -1,7 +1,7 @@
 ---
 title: "[WebLogic] Administration Port, Side-By-Side Deploy"
 categories: [WAS, WebLogic]
-tags: [WebLogic, Tips, Deploy]
+tags: [WAS, WebLogic, Deploy]
 date: 2021-12-07 18:16:49 +0900
 author: DongHyun Kim
 typora-root-url: ..
