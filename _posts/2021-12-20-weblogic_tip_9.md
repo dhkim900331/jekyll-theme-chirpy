@@ -69,7 +69,7 @@ class gtplus{
 
 그래프는 다음과 같습니다.
 
-![image-20211220151849896](../assets/img/weblogic_tip_9/image-20211220151849896.png)
+![image-20211220151849896](/assets/img/weblogic_tip_9/image-20211220151849896.png)
 
 클래스 내의 string, int 등은 통신에서 보낼 수 있지만, 클래스 객체는 연결고리(레퍼런스)가 그래프 형식이기 때문에 정리할 필요가 있습니다.
 
@@ -89,7 +89,7 @@ JDK 1.1에서 나온 직렬화는 단순히 인터페이스를 구현(implements
 
 
 
-![image-20211220151954494](../assets/img/weblogic_tip_9/image-20211220151954494.png)
+![image-20211220151954494](/assets/img/weblogic_tip_9/image-20211220151954494.png)
 
 
 

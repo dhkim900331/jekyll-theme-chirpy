@@ -1,5 +1,5 @@
 ---
-title: "[WebLogic] WLDF (건강보험공단 차세대그룹웨어 기준으로 정리)"
+title: "[WebLogic] WLDF"
 date: 2021-12-06 00:00:00 +0900
 categories: [WAS, WebLogic]
 tags: [WebLogic, Issues, WLDF]
@@ -78,4 +78,5 @@ Doc ID. 950742.1 문서에도 reduce size 로 표현되고 있다.
 
 ## 3.2 두번째 방법 (권장?)
 콘솔 - Diagnostics - Built-in Diagnostic Modules - <Servers> - Low 값을 None 으로 변경.
+
 > 3.1 옵션을 적용하지 않아도 되며, 파일에 아무런 기록을 하지 않는다. 기본 파일은 생성이 된다.
