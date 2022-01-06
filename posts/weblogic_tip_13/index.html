@@ -1,0 +1,373 @@
+<!DOCTYPE html><html lang="ko-KR" mode="dark" ><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><meta name="day-prompt" content="days ago"><meta name="hour-prompt" content="hours ago"><meta name="minute-prompt" content="minutes ago"><meta name="justnow-prompt" content="just now"><meta name="generator" content="Jekyll v4.2.1" /><meta property="og:title" content="[WebLogic] 웹로직에 부하를 주는 스레드 찾기(Linux, AIX, Windows7)" /><meta name="author" content="DongHyun Kim" /><meta property="og:locale" content="ko_KR" /><meta name="description" content="Contents" /><meta property="og:description" content="Contents" /><link rel="canonical" href="https://dhkim900331.github.io/posts/weblogic_tip_13/" /><meta property="og:url" content="https://dhkim900331.github.io/posts/weblogic_tip_13/" /><meta property="og:site_name" content="donghyun.kim" /><meta property="og:type" content="article" /><meta property="article:published_time" content="2021-12-20T19:31:57+09:00" /><meta name="twitter:card" content="summary" /><meta property="twitter:title" content="[WebLogic] 웹로직에 부하를 주는 스레드 찾기(Linux, AIX, Windows7)" /><meta name="google-site-verification" content="google_meta_tag_verification" /> <script type="application/ld+json"> {"author":{"@type":"Person","name":"DongHyun Kim"},"description":"Contents","url":"https://dhkim900331.github.io/posts/weblogic_tip_13/","@type":"BlogPosting","headline":"[WebLogic] 웹로직에 부하를 주는 스레드 찾기(Linux, AIX, Windows7)","dateModified":"2021-12-20T19:37:31+09:00","datePublished":"2021-12-20T19:31:57+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://dhkim900331.github.io/posts/weblogic_tip_13/"},"@context":"https://schema.org"}</script><title>[WebLogic] 웹로직에 부하를 주는 스레드 찾기(Linux, AIX, Windows7) | donghyun.kim</title><link rel="apple-touch-icon" sizes="180x180" href="/assets/img/favicons/apple-touch-icon.png"><link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicons/favicon-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicons/favicon-16x16.png"><link rel="manifest" href="/assets/img/favicons/site.webmanifest"><link rel="shortcut icon" href="/assets/img/favicons/favicon.ico"><meta name="apple-mobile-web-app-title" content="donghyun.kim"><meta name="application-name" content="donghyun.kim"><meta name="msapplication-TileColor" content="#da532c"><meta name="msapplication-config" content="/assets/img/favicons/browserconfig.xml"><meta name="theme-color" content="#ffffff"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"><link rel="dns-prefetch" href="https://fonts.gstatic.com"><link rel="preconnect" href="https://www.google-analytics.com" crossorigin="use-credentials"><link rel="dns-prefetch" href="https://www.google-analytics.com"><link rel="preconnect" href="https://www.googletagmanager.com" crossorigin="anonymous"><link rel="dns-prefetch" href="https://www.googletagmanager.com"><link rel="preconnect" href="https://cdn.jsdelivr.net"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.11.2/css/all.min.css"><link rel="stylesheet" href="/assets/css/style.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@1.0.1/dist/bootstrap-toc.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/magnific-popup@1.1.0/dist/magnific-popup.min.css"> <script src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script> <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"> mermaid.initialize({ startOnLoad: true }); </script><body data-spy="scroll" data-target="#toc"><div id="sidebar" class="d-flex flex-column align-items-end" lang="en"><div class="profile-wrapper text-center"><div id="avatar"> <a href="/" alt="avatar" class="mx-auto"> <img src="/assets/img/me_small.jpg" alt="avatar" onerror="this.style.display='none'"> </a></div><div class="site-title mt-3"> <a href="/">donghyun.kim</a></div><div class="site-subtitle font-italic">hello world</div></div><ul class="w-100"><li class="nav-item"> <a href="/" class="nav-link"> <i class="fa-fw fas fa-home ml-xl-3 mr-xl-3 unloaded"></i> <span>HOME</span> </a><li class="nav-item"> <a href="/categories/" class="nav-link"> <i class="fa-fw fas fa-stream ml-xl-3 mr-xl-3 unloaded"></i> <span>CATEGORIES</span> </a><li class="nav-item"> <a href="/tags/" class="nav-link"> <i class="fa-fw fas fa-tag ml-xl-3 mr-xl-3 unloaded"></i> <span>TAGS</span> </a><li class="nav-item"> <a href="/archives/" class="nav-link"> <i class="fa-fw fas fa-archive ml-xl-3 mr-xl-3 unloaded"></i> <span>ARCHIVES</span> </a><li class="nav-item"> <a href="/about/" class="nav-link"> <i class="fa-fw fas fa-info-circle ml-xl-3 mr-xl-3 unloaded"></i> <span>ABOUT</span> </a></ul><div class="sidebar-bottom mt-auto d-flex flex-wrap justify-content-center align-items-center"> <a href="https://github.com/dhkim900331" aria-label="github" target="_blank" rel="noopener"> <i class="fab fa-github"></i> </a> <a href="https://twitter.com/" aria-label="twitter" target="_blank" rel="noopener"> <i class="fab fa-twitter"></i> </a> <a href=" javascript:location.href = 'mailto:' + ['ks900331','naver.com'].join('@')" aria-label="email" > <i class="fas fa-envelope"></i> </a> <a href="/feed.xml" aria-label="rss" > <i class="fas fa-rss"></i> </a></div></div><div id="topbar-wrapper" class="row justify-content-center topbar-down"><div id="topbar" class="col-11 d-flex h-100 align-items-center justify-content-between"> <span id="breadcrumb"> <span> <a href="/"> Home </a> </span> <span>[WebLogic] 웹로직에 부하를 주는 스레드 찾기(Linux, AIX, Windows7)</span> </span> <i id="sidebar-trigger" class="fas fa-bars fa-fw"></i><div id="topbar-title"> Post</div><i id="search-trigger" class="fas fa-search fa-fw"></i> <span id="search-wrapper" class="align-items-center"> <i class="fas fa-search fa-fw"></i> <input class="form-control" id="search-input" type="search" aria-label="search" autocomplete="off" placeholder="Search..."> <i class="fa fa-times-circle fa-fw" id="search-cleaner"></i> </span> <span id="search-cancel" >Cancel</span></div></div><div id="main-wrapper"><div id="main"><div class="row"><div id="post-wrapper" class="col-12 col-lg-11 col-xl-8"><div class="post pl-1 pr-1 pl-sm-2 pr-sm-2 pl-md-4 pr-md-4"><h1 data-toc-skip>[WebLogic] 웹로직에 부하를 주는 스레드 찾기(Linux, AIX, Windows7)</h1><div class="post-meta text-muted d-flex flex-column"><div> <span class="semi-bold"> DongHyun Kim </span> on <span class="timeago " data-toggle="tooltip" data-placement="bottom" title="Mon, Dec 20, 2021, 7:31 PM +0900" >Dec 20, 2021<i class="unloaded">2021-12-20T19:31:57+09:00</i> </span></div><div> <span> Updated <span class="timeago lastmod" data-toggle="tooltip" data-placement="bottom" title="Mon, Dec 20, 2021, 7:37 PM +0900" >Dec 20, 2021<i class="unloaded">2021-12-20T19:37:31+09:00</i> </span> </span> <span class="readtime" data-toggle="tooltip" data-placement="bottom" title="2170 words">12 min read</span></div></div><div class="post-content"><hr /><p><strong>Contents</strong></p><ul id="markdown-toc"><li><a href="#1-개요" id="markdown-toc-1-개요">1. 개요</a><li><a href="#2-다음의-jsp를-배포하여-실행" id="markdown-toc-2-다음의-jsp를-배포하여-실행">2. 다음의 JSP를 배포하여 실행</a><ul><li><a href="#3-os별-확인-방법" id="markdown-toc-3-os별-확인-방법">3. OS별 확인 방법</a><ul><li><a href="#31-linux" id="markdown-toc-31-linux">3.1 Linux</a><li><a href="#32-windows-7" id="markdown-toc-32-windows-7">3.2 Windows 7</a><li><a href="#33-aix" id="markdown-toc-33-aix">3.3 AIX</a></ul></ul></ul><hr /><h1 id="1-개요">1. 개요</h1><p>웹로직에 부하를 주는 스레드 찾기(Linux, AIX, Windows7)</p><h1 id="2-다음의-jsp를-배포하여-실행">2. 다음의 JSP를 배포하여 실행</h1><div class="language-jsp highlighter-rouge"><div class="code-header"> <span text-data=" Jsp "><i class="fa-fw fas fa-code small"></i></span> <button aria-label="copy" title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+</pre><td class="rouge-code"><pre>for (int i=0; i <span class="nt">&lt;</span> <span class="err">3;</span> <span class="na">i</span><span class="err">++)</span>
+    <span class="err">{</span>
+       <span class="na">Thread</span> <span class="na">x=</span><span class="s">new</span> <span class="na">Thread</span><span class="err">(</span><span class="na">new</span> <span class="na">Runnable</span><span class="err">(){</span>
+                  <span class="na">public</span> <span class="na">void</span> <span class="na">run</span><span class="err">()</span>
+                    <span class="err">{</span>
+                       <span class="na">System.out.println</span><span class="err">("</span><span class="na">Thread</span> <span class="err">"</span> <span class="err">+</span><span class="na">Thread.currentThread</span><span class="err">().</span><span class="na">getName</span><span class="err">()</span> <span class="err">+</span> <span class="err">"</span> <span class="na">started</span><span class="err">");</span>
+                       <span class="na">double</span> <span class="na">val=</span><span class="s">10;</span>
+                       <span class="na">for</span> <span class="err">(;;)</span>
+                         <span class="err">{</span>
+                            <span class="na">Math.atan</span><span class="err">(</span><span class="na">Math.sqrt</span><span class="err">(</span><span class="na">Math.pow</span><span class="err">(</span><span class="na">val</span><span class="err">,</span> <span class="err">10)));</span>
+                         <span class="err">}</span>
+                     <span class="err">}</span>
+              <span class="err">});</span>
+        <span class="na">x.start</span><span class="err">();</span>
+    <span class="err">}</span>
+<span class="err">%</span><span class="nt">&gt;</span>
+</pre></table></code></div></div><h2 id="3-os별-확인-방법">3. OS별 확인 방법</h2><h3 id="31-linux">3.1 Linux</h3><div class="language-bash highlighter-rouge"><div class="code-header"> <span text-data=" Shell "><i class="fa-fw fas fa-code small"></i></span> <button aria-label="copy" title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre><td class="rouge-code"><pre><span class="c"># ps -ef | grep java</span>
+</pre></table></code></div></div><blockquote><p>instance PID를 찾는다. <strong>찾은 PID: 22384</strong></p></blockquote><div class="language-bash highlighter-rouge"><div class="code-header"> <span text-data=" Shell "><i class="fa-fw fas fa-code small"></i></span> <button aria-label="copy" title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre><td class="rouge-code"><pre><span class="c"># watch "ps -eLo pid,ppid,tid,pcpu,comm | grep 22384"</span>
+</pre></table></code></div></div><blockquote><p>watch 명령어로 2초마다 cpu 사용량을 게더링 할 수 있다.</p><p><em><strong>문서에는 watch가 cpu 사용량을 게더링하기 유용하지 않은 명령어라고 한다.</strong></em></p></blockquote><div class="language-bash highlighter-rouge"><div class="code-header"> <span text-data=" Shell "><i class="fa-fw fas fa-code small"></i></span> <button aria-label="copy" title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre><td class="rouge-code"><pre><span class="c"># ps -eLo pid,ppid,tid,pcpu,comm | grep 22384 &gt; 22384.out</span>
+</pre></table></code></div></div><blockquote><p>현재 cpu 사용량 게더링 결과를 22384.out으로 저장 한다.</p></blockquote><div class="language-bash highlighter-rouge"><div class="code-header"> <span text-data=" Shell "><i class="fa-fw fas fa-code small"></i></span> <button aria-label="copy" title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre><td class="rouge-code"><pre><span class="c"># cat 22384.out | awk '{ print "pccpu: "$4" pid: "$1" ppid: "$2" ttid: "$3" comm: "$5}' |sort -n</span>
+</pre></table></code></div></div><blockquote><p>게더링 결과의 cpu 사용량을 기준으로 내림차순하여 본다.</p></blockquote><div class="language-bash highlighter-rouge"><div class="code-header"> <span text-data=" Shell "><i class="fa-fw fas fa-code small"></i></span> <button aria-label="copy" title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre><td class="rouge-code"><pre><span class="c"># ps -eLo pid,ppid,tid,pcpu,comm | grep 22384 | awk '{ print "pccpu: "$4" pid: "$1" ppid: "$2" ttid: "$3" comm: "$5}' |sort -n</span>
+</pre></table></code></div></div><blockquote><p>‘다’와 ‘라’의 명령어를 한 줄로 합쳐서 볼 수 있다.</p><p>실행 결과는 다음과 같다. 인스턴스(22384)의 32.2퍼센트 cpu를 사용하는 스레드 아이디는 <strong>22557, 22558, 22559</strong></p><p><img data-proofer-ignore data-src="/assets/img/weblogic_tip_13/image-20211220155123328.png" alt="image-20211220155123328" /></p><p>22557, 22558, 22559를 헥사값(16진수)로 변환하면 각각 <strong>0x581d, 0x581e, 0x581f</strong> 다.</p></blockquote><div class="language-bash highlighter-rouge"><div class="code-header"> <span text-data=" Shell "><i class="fa-fw fas fa-code small"></i></span> <button aria-label="copy" title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre><td class="rouge-code"><pre><span class="c"># kill -3 22384</span>
+</pre></table></code></div></div><blockquote><p>덤프를 생성 후, 위에서 구한 헥사값을 검색하면 다음과 같다.</p><p>jsp에서 Thread 3개를 생성 하고, 각각 Math.atan 메소드 실행 부분을 덤프에서도 확인할 수 있다.</p></blockquote><pre><code class="language-찾은결과">"Thread-36" daemon prio=10 tid=0x00007f43d0059800 nid=0x581f runnable [0x00007f43cf8f7000]
+   java.lang.Thread.State: RUNNABLE
+     at java.lang.StrictMath.atan(Native Method)
+     at java.lang.Math.atan(Math.java:204)
+     at jsp_servlet.__highcpu$1.run(__highcpu.java:84)
+     at java.lang.Thread.run(Thread.java:745)
+     
+"Thread-35" daemon prio=10 tid=0x00007f43d0058800 nid=0x581e runnable [0x00007f43cf9f8000]
+   java.lang.Thread.State: RUNNABLE
+     at java.lang.StrictMath.atan(Native Method)
+     at java.lang.Math.atan(Math.java:204)
+     at jsp_servlet.__highcpu$1.run(__highcpu.java:84)
+     at java.lang.Thread.run(Thread.java:745)
+
+"Thread-34" daemon prio=10 tid=0x00007f43d005b800 nid=0x581d runnable [0x00007f43cfaf9000]
+   java.lang.Thread.State: RUNNABLE
+     at java.lang.StrictMath.atan(Native Method)
+     at java.lang.Math.atan(Math.java:204)
+     at jsp_servlet.__highcpu$1.run(__highcpu.java:84)
+     at java.lang.Thread.run(Thread.java:745)
+</code></pre><h3 id="32-windows-7">3.2 Windows 7</h3><p><a href="https://technet.microsoft.com/en-us/sysinternals/bb896682">여기</a> 에서 프로세스 리스트를 확인할 수 있는 pslist 툴을 설치한다.</p><blockquote><p>압축을 해제하고 cmd로 해당 디렉토리에서 다음 작업을 이어간다.</p></blockquote><div class="language-bash highlighter-rouge"><div class="code-header"> <span text-data=" Shell "><i class="fa-fw fas fa-code small"></i></span> <button aria-label="copy" title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre><td class="rouge-code"><pre><span class="c"># pslist java</span>
+</pre></table></code></div></div><blockquote><p><img data-proofer-ignore data-src="/assets/img/weblogic_tip_13/image-20211220161714786.png" alt="image-20211220161714786" /></p><p>pc에서 현재 동작중인 프로세스 중 자바를 찾아본다. <strong>java PID는 7820</strong></p><p>각 파라메타 설명은 pslist 툴을 다운로드 받은 홈페이지에 있다.</p></blockquote><div class="language-bash highlighter-rouge"><div class="code-header"> <span text-data=" Shell "><i class="fa-fw fas fa-code small"></i></span> <button aria-label="copy" title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre><td class="rouge-code"><pre><span class="c"># pslist -d 7820</span>
+8604   8    138786          Running  0:03:25.999   0:00:00.000    0:03:30.540
+</pre></table></code></div></div><blockquote><p>java 프로세스의 스레드 정보를 볼 수 있다.</p><p>다음이 그 정보인데, Cswtch와 User/Kernel Time을 보면 문제가 되는 스레드 아이디는 <strong>7384, 5712, 8604 다.</strong>Cswtch(Context Switch)는 멀티태스킹을 위하여 실행되는 여러 스레드들의 상태를 저장하고, 복구하는 일련의 과정이 얼마나 자주 일어났는지를 뜻한다.</p><p><em>참고사이트: http://en.wikipedia.org/wiki/Context_switch</em></p><p><strong><em>User Time은</em></strong> CPU의 사용자 영역에서 실행된 총 시간이다. 모두 03분 26초 실행 시간을 보여주고 있다.</p><p><strong><em>Kernel Time은</em></strong> CPU의 커널 영역을 의미하는 시간이다.</p><p>User Time 3분대를 기록한 스레드 3개가 너무 오랫동안 실행이 되며, Cswtch 수치가 이상하다.</p><p>각 스레드 아이디를 헥사값으로 변환하여 스레드 덤프에서 찾아보자.</p><p>7384: <strong>1CD8</strong>, 5712: <strong>1650</strong>, 8604: 219C 각각을 찾아보니 다음과 같다.</p></blockquote><pre><code class="language-찾은결과">"Thread-15" daemon prio=6 tid=0x0000000007729800 nid=0x219c runnable [0x000000000cdaf000]
+   java.lang.Thread.State: RUNNABLE
+     at java.lang.StrictMath.atan(Native Method)
+     at java.lang.Math.atan(Math.java:187)
+     at jsp_servlet.__highcpu$1.run(__highcpu.java:79)
+     at java.lang.Thread.run(Thread.java:662)
+
+"Thread-14" daemon prio=6 tid=0x0000000007729000 nid=0x1650 runnable [0x000000000ccaf000]
+   java.lang.Thread.State: RUNNABLE
+     at java.lang.StrictMath.atan(Native Method)
+     at java.lang.Math.atan(Math.java:187)
+     at jsp_servlet.__highcpu$1.run(__highcpu.java:79)
+     at java.lang.Thread.run(Thread.java:662)
+
+"Thread-13" daemon prio=6 tid=0x0000000007728000 nid=0x1cd8 runnable [0x000000000cbaf000]
+   java.lang.Thread.State: RUNNABLE
+     at java.lang.StrictMath.atan(Native Method)
+     at java.lang.Math.atan(Math.java:187)
+     at jsp_servlet.__highcpu$1.run(__highcpu.java:79)
+     at java.lang.Thread.run(Thread.java:662)
+</code></pre><h3 id="33-aix">3.3 AIX</h3><div class="language-bash highlighter-rouge"><div class="code-header"> <span text-data=" Shell "><i class="fa-fw fas fa-code small"></i></span> <button aria-label="copy" title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre><td class="rouge-code"><pre><span class="c"># ps -ef | grep java</span>
+</pre></table></code></div></div><blockquote><p>instance PID를 찾는다. <strong>찾은 PID: 16908684</strong></p></blockquote><div class="language-bash highlighter-rouge"><div class="code-header"> <span text-data=" Shell "><i class="fa-fw fas fa-code small"></i></span> <button aria-label="copy" title-succeed="Copied!"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre><td class="rouge-code"><pre><span class="c"># ps -mp 16908684 -o THREAD</span>
+</pre></table></code></div></div><blockquote><p>instance PID의 스레드 목록을 출력한다.</p></blockquote><pre><code class="language-위명령의결과">    USER      PID     PPID        TID S  CP PRI SC    WCHAN        F     TT BND COMMAND
+
+     cs2 16908684 17825820          - A 360  60 55        *   202001  pts/2   - /usr/java7_64/bin/java -Xms512m -Xmx512m -Dweblo
+
+       -        -        -    4980787 S   0  82  1 f1000f0a10004c40  8410400      -   - -
+
+       -        -        -    9306279 S   0  82  1 f1000f0a10008e40  8410400      -   - -
+
+       -        -        -   12976337 Z   0  82  1        -   c00001      -   - -
+
+       -        -        -   13893815 S   0  82  1 f1000f0a1000d440  8410400      -   - -
+
+       -        -        -   15663295 Z   0  98  1        -   c00001      -   - -
+
+       -        -        -   20578311 S   0  82  1 f1000f0a10013a40  8410400      -   - -
+
+       -        -        -   21168367 S   0  60  1 f1000f0a10014340  8410400      -   - -
+
+       -        -        -   21561529 R 120 162  0        -   400000      -   - -
+
+       -        -        -   24510581 S   0  66  1 f10005000e3ba208   410400      -   - -
+
+       -        -        -   31195139 Z   0  98  1        -   c00001      -   - -
+
+       -        -        -   32243767 S   0  82  1 f1000f0a1001ec40  8410400      -   - -
+
+       -        -        -   38928587 S   0  82  1 f100012020bbd4b0   410400      -   - -
+
+       -        -        -   39583921 S   0  82  1 f100012027555f78   410400      -   - -
+
+       -        -        -   46858399 S   0  82  1 f1000f0a1002cb40  8410400      -   - -
+
+       -        -        -   52035835 S   0 100  1 f1000f0a10031a40  8410400      -   - -
+
+       -        -        -   53542927 S   0  82  1 f1000f0a10033140  8410400      -   - -
+
+       -        -        -   54525969 S   0  60  1 f1000f0a10034040  8410400      -   - -
+
+       -        -        -   56295463 Z   0  98  1        -   c00001      -   - -
+
+       -        -        -   56819751 Z   0  98  1        -   c00001      -   - -
+
+       -        -        -   56885315 S   0  82  1 f1000f0a10036440  8410400      -   - -
+
+       -        -        -   60031145 S   0  82  1 f1000f0a10039440  8410400      -   - -
+
+       -        -        -   68812921 S   0  82  1 f1000f0a10041a40  8410400      -   - -
+
+       -        -        -   70451297 S   0  82  1 f1000f0a10043340  8410400      -   - -
+
+       -        -        -   72417493 Z   0  98  1        -   c00001      -   - -
+
+       -        -        -   73072781 S   0  94  1 f1000f0a10045b40  8410400      -   - -
+
+       -        -        -   76677207 Z   0  98  1        -   c00001      -   - -
+
+       -        -        -   77267163 S   0  82  1 f100012020b6ec78   410400      -   - -
+
+       -        -        -   77594839 S   0  60  1 f1000f0a1004a040  8410400      -   - -
+
+       -        -        -   85590073 S   0  82  1 f1000f0a10051a40  8410400      -   - -
+
+       -        -        -   90570909 S   0  82  1 f1000f0a10056640  8410400      -   - -
+
+       -        -        -   95551739 S   0  82  1 f1000f0a1005b240  8410400      -   - -
+
+       -        -        -   99811459 S   0  78  1 f1000f0a1005f340  8410400      -   - -
+
+       -        -        -  103415911 S   0  82  1 f1000f0a10062a40  8410400      -   - -
+
+       -        -        -  103546957 S   0  82  1 f100012020b6eb78   410400      -   - -
+
+       -        -        -  111018063 S   0  60  1 f1000120085fc598   410400      -   - -
+
+       -        -        -  118685867 S   0  66  1 f1000f0a10071340  8410400      -   - -
+
+       -        -        -   18088333 S   0  78  1 f1000f0a10091440  8410400      -   - -
+
+       -        -        -   18153845 S   0  60  1 f1000f0a10091540  8410400      -   - -
+
+       -        -        -   18612571 S   0  82  1 f1000f0a10091c40  8410400      -   - -
+
+       -        -        -   22413601 S   0  82  1 f1000f0a10095640  8410400      -   - -
+
+       -        -        -   23527931 Z   0  98  1        -   c00001      -   - -
+
+       -        -        -   43450815 R 120 162  0        -   400000      -   - -
+
+       -        -        -   58196403 S   0  82  1 f1000f0a100b7840  8410400      -   - -
+
+       -        -        -   61538703 S   0  78  1 f1000f0a100bab40  8410400      -   - -
+
+       -        -        -   66978283 S   0  82  1 f1000f0a100bfe40  8410400      -   - -
+
+       -        -        -   76087735 S   0  82  1 f1000f0a100c8940  8410400      -   - -
+
+       -        -        -   79102281 S   0  60  1 f1000f0a100cb740  8410400      -   - -
+
+       -        -        -   83231169 S   0  82  1 f10001201fb6a978   410400      -   - -
+
+       -        -        -   83624307 S   0  82  1 f1000f0a100cfc40  8410400      -   - -
+
+       -        -        -   83755267 S   0  62  1 f100011808232118   410400      -   - -
+
+       -        -        -   84541707 R 120 162  0        -   400000      -   - -
+
+       -        -        -   85000601 S   0  66  1 f1000f0a100d1140  8410400      -   - -
+
+       -        -        -   91291923 S   0  82  1 f1000f0a100d7140  8410400      -   - -
+
+       -        -        -   94175563 S   0  82  1 f1000f0a100d9d40  8410400      -   - -
+
+       -        -        -   95551785 Z   0  98  1        -   c00001      -   - -
+
+       -        -        -   96010609 S   0  82  1 f1000f0a100db940  8410400      -   - -
+
+       -        -        -   97386857 S   0  82  1 f1000f0a100dce40  8410400      -   - -
+
+       -        -        -  101187847 S   0  60  1 f1000f0a100e0840  8410400      -   - -
+</code></pre><blockquote><p>CP는 ~ 이다. 대부분 CP가 0이지만 TID(Thread ID) <strong>21561529, 43450815, 84541707</strong>는 120의 높은 값을 보여주고 있다.</p><p>위 TID를 각각 16진수로 변환하면 <strong>14900B9, 29701BF, 50A010B</strong>가 된다.</p><p>스레드 덤프에서 16진수로 변환한 TID를 검색해보니, 실행한 jsp 정보를 볼 수 있었다.</p></blockquote><pre><code class="language-찾은결과">3XMTHREADINFO      "Thread-33" J9VMThread:0x00000000524AEB00, j9thread_t:0x00000100151EC5C0, java/lang/Thread:0x00000000498A4898, s
+
+tate:R, prio=5
+
+3XMJAVALTHREAD            (java/lang/Thread getId:0x54, isDaemon:true)
+
+3XMTHREADINFO1            (native thread ID:0x14900B9, native priority:0x5, native policy:UNKNOWN, vmstate:CW, vm thread flags:0x00
+
+000001)
+
+3XMCPUTIME               CPU usage total: 2274.685427000 secs, user: 2274.684771000 secs, system: 0.000656000 secs
+
+3XMHEAPALLOC             Heap bytes allocated since last GC cycle=0 (0x0)
+
+3XMTHREADINFO3           Java callstack:
+
+4XESTACKTRACE                at jsp_servlet/__test$1.run(__test.java:81(Compiled Code))
+
+4XESTACKTRACE                at java/lang/Thread.run(Thread.java:795)
+
+3XMTHREADINFO3           Native callstack:
+
+4XENATIVESTACK               _event_wait+0x2b8 (0x09000000005C489C [libpthreads.a+0x1689c])
+
+4XENATIVESTACK               _cond_wait_local+0x4e4 (0x09000000005D2668 [libpthreads.a+0x24668])
+
+4XENATIVESTACK               _cond_wait+0xbc (0x09000000005D2C40 [libpthreads.a+0x24c40])
+
+4XENATIVESTACK               pthread_cond_wait+0x1a8 (0x09000000005D38AC [libpthreads.a+0x258ac])
+
+4XENATIVESTACK               (0x090000000149D2F4 [libj9thr26.so+0x62f4])
+
+4XENATIVESTACK               (0x090000000149CF40 [libj9thr26.so+0x5f40])
+
+4XENATIVESTACK               (0x09000000013E2F58 [libj9vm26.so+0xff58])
+
+4XENATIVESTACK               (0x09000000013EF850 [libj9vm26.so+0x1c850])
+
+4XENATIVESTACK               (0x0900000001DCEF3C [libj9jit26.so+0x7dff3c])
+
+4XENATIVESTACK               (0x09000000013D9864 [libj9vm26.so+0x6864])
+
+4XENATIVESTACK               (0x09000000014B4CE0 [libj9prt26.so+0x2ce0])
+
+4XENATIVESTACK               (0x09000000013D96D4 [libj9vm26.so+0x66d4])
+
+4XENATIVESTACK               (0x0900000001499AF4 [libj9thr26.so+0x2af4])
+
+4XENATIVESTACK               _pthread_body+0xf0 (0x09000000005B1D54 [libpthreads.a+0x3d54])
+
+NULL
+
+​
+
+3XMTHREADINFO      "Thread-35" J9VMThread:0x00000000524B1300, j9thread_t:0x000001001771AD40, java/lang/Thread:0x00000000498A5908, s
+
+tate:R, prio=5
+
+3XMJAVALTHREAD            (java/lang/Thread getId:0x56, isDaemon:true)
+
+3XMTHREADINFO1            (native thread ID:0x29701BF, native priority:0x5, native policy:UNKNOWN, vmstate:CW, vm thread flags:0x00
+
+000001)
+
+3XMCPUTIME               CPU usage total: 2265.056957000 secs, user: 2265.056386000 secs, system: 0.000571000 secs
+
+3XMHEAPALLOC             Heap bytes allocated since last GC cycle=0 (0x0)
+
+3XMTHREADINFO3           Java callstack:
+
+4XESTACKTRACE                at jsp_servlet/__test$1.run(__test.java:81(Compiled Code))
+
+4XESTACKTRACE                at java/lang/Thread.run(Thread.java:795)
+
+3XMTHREADINFO3           Native callstack:
+
+4XENATIVESTACK               _event_wait+0x2b8 (0x09000000005C489C [libpthreads.a+0x1689c])
+
+4XENATIVESTACK               _cond_wait_local+0x4e4 (0x09000000005D2668 [libpthreads.a+0x24668])
+
+4XENATIVESTACK               _cond_wait+0xbc (0x09000000005D2C40 [libpthreads.a+0x24c40])
+
+4XENATIVESTACK               pthread_cond_wait+0x1a8 (0x09000000005D38AC [libpthreads.a+0x258ac])
+
+4XENATIVESTACK               (0x090000000149D2F4 [libj9thr26.so+0x62f4])
+
+4XENATIVESTACK               (0x090000000149CF40 [libj9thr26.so+0x5f40])
+
+4XENATIVESTACK               (0x09000000013E2F58 [libj9vm26.so+0xff58])
+
+4XENATIVESTACK               (0x09000000013EF850 [libj9vm26.so+0x1c850])
+
+4XENATIVESTACK               (0x0900000001DCEF3C [libj9jit26.so+0x7dff3c])
+
+4XENATIVESTACK               (0x09000000013D9864 [libj9vm26.so+0x6864])
+
+4XENATIVESTACK               (0x09000000014B4CE0 [libj9prt26.so+0x2ce0])
+
+4XENATIVESTACK               (0x09000000013D96D4 [libj9vm26.so+0x66d4])
+
+4XENATIVESTACK               (0x0900000001499AF4 [libj9thr26.so+0x2af4])
+
+4XENATIVESTACK               _pthread_body+0xf0 (0x09000000005B1D54 [libpthreads.a+0x3d54])
+
+NULL
+
+​
+
+3XMTHREADINFO      "Thread-34" J9VMThread:0x0000000052308300, j9thread_t:0x000001001771B260, java/lang/Thread:0x00000000498A5250, s
+
+tate:R, prio=5
+
+3XMJAVALTHREAD            (java/lang/Thread getId:0x55, isDaemon:true)
+
+3XMTHREADINFO1            (native thread ID:0x50A010B, native priority:0x5, native policy:UNKNOWN, vmstate:CW, vm thread flags:0x00
+
+000001)
+
+3XMCPUTIME               CPU usage total: 2264.278773000 secs, user: 2264.278270000 secs, system: 0.000503000 secs
+
+3XMHEAPALLOC             Heap bytes allocated since last GC cycle=0 (0x0)
+
+3XMTHREADINFO3           Java callstack:
+
+4XESTACKTRACE                at jsp_servlet/__test$1.run(__test.java:81(Compiled Code))
+
+4XESTACKTRACE                at java/lang/Thread.run(Thread.java:795)
+
+3XMTHREADINFO3           Native callstack:
+
+4XENATIVESTACK               _event_wait+0x2b8 (0x09000000005C489C [libpthreads.a+0x1689c])
+
+4XENATIVESTACK               _cond_wait_local+0x4e4 (0x09000000005D2668 [libpthreads.a+0x24668])
+
+4XENATIVESTACK               _cond_wait+0xbc (0x09000000005D2C40 [libpthreads.a+0x24c40])
+
+4XENATIVESTACK               pthread_cond_wait+0x1a8 (0x09000000005D38AC [libpthreads.a+0x258ac])
+
+4XENATIVESTACK               (0x090000000149D2F4 [libj9thr26.so+0x62f4])
+
+4XENATIVESTACK               (0x090000000149CF40 [libj9thr26.so+0x5f40])
+
+4XENATIVESTACK               (0x09000000013E2F58 [libj9vm26.so+0xff58])
+
+4XENATIVESTACK               (0x09000000013EF850 [libj9vm26.so+0x1c850])
+
+4XENATIVESTACK               (0x0900000001DCEF3C [libj9jit26.so+0x7dff3c])
+
+4XENATIVESTACK               (0x09000000013D9864 [libj9vm26.so+0x6864])
+
+4XENATIVESTACK               (0x09000000014B4CE0 [libj9prt26.so+0x2ce0])
+
+4XENATIVESTACK               (0x09000000013D96D4 [libj9vm26.so+0x66d4])
+
+4XENATIVESTACK               (0x0900000001499AF4 [libj9thr26.so+0x2af4])
+
+4XENATIVESTACK               _pthread_body+0xf0 (0x09000000005B1D54 [libpthreads.a+0x3d54])
+
+NULL
+</code></pre></div><div class="post-tail-wrapper text-muted"><div class="post-meta mb-3"> <i class="far fa-folder-open fa-fw mr-1"></i> <a href='/categories/was/'>WAS</a>, <a href='/categories/weblogic/'>WebLogic</a></div><div class="post-tags"> <i class="fa fa-tags fa-fw mr-1"></i> <a href="/tags/was/" class="post-tag no-text-decoration" >WAS</a> <a href="/tags/weblogic/" class="post-tag no-text-decoration" >WebLogic</a></div><div class="post-tail-bottom d-flex justify-content-between align-items-center mt-3 pt-5 pb-2"><div class="license-wrapper"> This post is licensed under <a href="https://creativecommons.org/licenses/by/4.0/"> CC BY 4.0 </a> by the author.</div><div class="share-wrapper"> <span class="share-label text-muted mr-1">Share</span> <span class="share-icons"> <a href="https://twitter.com/intent/tweet?text=[WebLogic] 웹로직에 부하를 주는 스레드 찾기(Linux, AIX, Windows7) - donghyun.kim&url=https://dhkim900331.github.io/posts/weblogic_tip_13/" data-toggle="tooltip" data-placement="top" title="Twitter" target="_blank" rel="noopener" aria-label="Twitter"> <i class="fa-fw fab fa-twitter"></i> </a> <a href="https://www.facebook.com/sharer/sharer.php?title=[WebLogic] 웹로직에 부하를 주는 스레드 찾기(Linux, AIX, Windows7) - donghyun.kim&u=https://dhkim900331.github.io/posts/weblogic_tip_13/" data-toggle="tooltip" data-placement="top" title="Facebook" target="_blank" rel="noopener" aria-label="Facebook"> <i class="fa-fw fab fa-facebook-square"></i> </a> <a href="https://telegram.me/share?text=[WebLogic] 웹로직에 부하를 주는 스레드 찾기(Linux, AIX, Windows7) - donghyun.kim&url=https://dhkim900331.github.io/posts/weblogic_tip_13/" data-toggle="tooltip" data-placement="top" title="Telegram" target="_blank" rel="noopener" aria-label="Telegram"> <i class="fa-fw fab fa-telegram"></i> </a> <i id="copy-link" class="fa-fw fas fa-link small" data-toggle="tooltip" data-placement="top" title="Copy link" title-succeed="Link copied successfully!"> </i> </span></div></div></div></div></div><div id="panel-wrapper" class="col-xl-3 pl-2 text-muted topbar-down"><div class="access"><div id="access-lastmod" class="post"> <span>Recent Update</span><ul class="post-content pl-0 pb-1 ml-1 mt-2"><li><a href="/posts/weblogic_issue_2/">[WebLogic] WLDF</a><li><a href="/posts/weblogic_tip_9/">[WebLogic] Serializable 란 무엇인가?</a><li><a href="/posts/weblogic_tip_13/">[WebLogic] 웹로직에 부하를 주는 스레드 찾기(Linux, AIX, Windows7)</a><li><a href="/posts/weblogic_tip_10/">[WebLogic] Session을 생성하고 복제하는 Method (setAttribute, getAttribute, getSession)</a><li><a href="/posts/jenkins_1/">[Jenkins] 설치</a></ul></div><div id="access-tags"> <span>Trending Tags</span><div class="d-flex flex-wrap mt-3 mb-1 mr-3"> <a class="post-tag" href="/tags/weblogic/">WebLogic</a> <a class="post-tag" href="/tags/was/">WAS</a> <a class="post-tag" href="/tags/rhcsa/">RHCSA</a> <a class="post-tag" href="/tags/study/">Study</a> <a class="post-tag" href="/tags/issues/">Issues</a> <a class="post-tag" href="/tags/session/">Session</a> <a class="post-tag" href="/tags/ansible/">Ansible</a> <a class="post-tag" href="/tags/gpt/">GPT</a> <a class="post-tag" href="/tags/install/">Install</a> <a class="post-tag" href="/tags/jekyll/">Jekyll</a></div></div></div><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@1.0.1/dist/bootstrap-toc.min.js"></script><div id="toc-wrapper" class="pl-0 pr-4 mb-5"> <span class="pl-3 pt-2 mb-2">Contents</span><nav id="toc" data-toggle="toc"></nav></div></div></div><div class="row"><div class="col-12 col-lg-11 col-xl-8"><div id="post-extend-wrapper" class="pl-1 pr-1 pl-sm-2 pr-sm-2 pl-md-4 pr-md-4"><div id="related-posts" class="mt-5 mb-2 mb-sm-4"><h3 class="pt-2 mt-1 mb-4 ml-1" data-toc-skip>Further Reading</h3><div class="card-deck mb-4"><div class="card"> <a href="/posts/weblogic_tip_10/"><div class="card-body"> <span class="timeago small" >Dec 20, 2021<i class="unloaded">2021-12-20T19:31:57+09:00</i> </span><h3 class="pt-0 mt-1 mb-3" data-toc-skip>[WebLogic] Session을 생성하고 복제하는 Method (setAttribute, getAttribute, getSession)</h3><div class="text-muted small"><p> Contents 1. 개요 2. Oracle 공식 문서 확인 3. 실제 Test 결과 및 결론 1. 개요 Session을 생성하고 복제하는 Method (setAttribute, getAttribute, getSession) 2. Oracle 공식 문서 확인 여기 에서 Session Replocation Sync가 setAt...</p></div></div></a></div><div class="card"> <a href="/posts/weblogic_tip_11/"><div class="card-body"> <span class="timeago small" >Dec 20, 2021<i class="unloaded">2021-12-20T19:31:57+09:00</i> </span><h3 class="pt-0 mt-1 mb-3" data-toc-skip>[WebLogic] weblogic.jar와 wlfullclient.jar</h3><div class="text-muted small"><p> Contents 1. 개요 2. 설명 1. 개요 weblogic.jar와 wlfullclient.jar 생성 방법 2. 설명 WebLogic 10.0 이전까지는, weblogic.jar file 하나로 T3, WLS-IIOP client application을 개발하여 WebLogic Server과 통신할 수 있다. WebLo...</p></div></div></a></div><div class="card"> <a href="/posts/weblogic_tip_12/"><div class="card-body"> <span class="timeago small" >Dec 20, 2021<i class="unloaded">2021-12-20T19:31:57+09:00</i> </span><h3 class="pt-0 mt-1 mb-3" data-toc-skip>[WebLogic] 데이터소스 커넥션 풀 시도 횟수 관련 옵션</h3><div class="text-muted small"><p> Contents 1. 개요 2. 설명 1. 개요 데이터소스 커넥션 풀 시도 횟수 관련 옵션 2. 설명 Connection Reserve Timeout 기본값 10초. 사진상 3 초일 경우, Reached maximum data… 에러의 경우 3초 동안 Free connection pool 찾음. 없으면 503 erro...</p></div></div></a></div></div></div><div class="post-navigation d-flex justify-content-between"> <a href="/posts/weblogic_tip_12/" class="btn btn-outline-primary" prompt="Older"><p>[WebLogic] 데이터소스 커넥션 풀 시도 횟수 관련 옵션</p></a> <a href="/posts/weblogic_tip_5/" class="btn btn-outline-primary" prompt="Newer"><p>[WebLogic] Cluster간 Session Replication</p></a></div></div></div></div><footer class="d-flex w-100 justify-content-center"><div class="d-flex justify-content-between align-items-center"><div class="footer-left"><p class="mb-0"> © 2022 <a href="https://github.com/dhkim900331">DongHyun Kim</a>. <span data-toggle="tooltip" data-placement="top" title="Except where otherwise noted, the blog posts on this site are licensed under the Creative Commons Attribution 4.0 International (CC BY 4.0) License by the author.">Some rights reserved.</span></p></div><div class="footer-right"><p class="mb-0"> Powered by <a href="https://jekyllrb.com" target="_blank" rel="noopener">Jekyll</a> with <a href="https://github.com/cotes2020/jekyll-theme-chirpy" target="_blank" rel="noopener">Chirpy</a> theme.</p></div></div></footer></div><div id="search-result-wrapper" class="d-flex justify-content-center unloaded"><div class="col-12 col-sm-11 post-content"><div id="search-hints"><h4 class="text-muted mb-4">Trending Tags</h4><a class="post-tag" href="/tags/weblogic/">WebLogic</a> <a class="post-tag" href="/tags/was/">WAS</a> <a class="post-tag" href="/tags/rhcsa/">RHCSA</a> <a class="post-tag" href="/tags/study/">Study</a> <a class="post-tag" href="/tags/issues/">Issues</a> <a class="post-tag" href="/tags/session/">Session</a> <a class="post-tag" href="/tags/ansible/">Ansible</a> <a class="post-tag" href="/tags/gpt/">GPT</a> <a class="post-tag" href="/tags/install/">Install</a> <a class="post-tag" href="/tags/jekyll/">Jekyll</a></div><div id="search-results" class="d-flex flex-wrap justify-content-center text-muted mt-3"></div></div></div></div><div id="mask"></div><a id="back-to-top" href="#" aria-label="back-to-top" class="btn btn-lg btn-box-shadow" role="button"> <i class="fas fa-angle-up"></i> </a> <script src="https://cdn.jsdelivr.net/npm/simple-jekyll-search@1.10.0/dest/simple-jekyll-search.min.js"></script> <script> SimpleJekyllSearch({ searchInput: document.getElementById('search-input'), resultsContainer: document.getElementById('search-results'), json: '/assets/js/data/search.json', searchResultTemplate: '<div class="pl-1 pr-1 pl-sm-2 pr-sm-2 pl-lg-4 pr-lg-4 pl-xl-0 pr-xl-0"> <a href="{url}">{title}</a><div class="post-meta d-flex flex-column flex-sm-row text-muted mt-1 mb-1"> {categories} {tags}</div><p>{snippet}</p></div>', noResultsText: '<p class="mt-5">Oops! No result founds.</p>', templateMiddleware: function(prop, value, template) { if (prop === 'categories') { if (value === '') { return `${value}`; } else { return `<div class="mr-sm-4"><i class="far fa-folder fa-fw"></i>${value}</div>`; } } if (prop === 'tags') { if (value === '') { return `${value}`; } else { return `<div><i class="fa fa-tag fa-fw"></i>${value}</div>`; } } } }); </script> <script src="https://cdn.jsdelivr.net/combine/npm/lozad/dist/lozad.min.js,npm/magnific-popup@1/dist/jquery.magnific-popup.min.js,npm/clipboard@2/dist/clipboard.min.js"></script> <script defer src="/assets/js/dist/post.min.js"></script> <script src="https://cdn.jsdelivr.net/combine/npm/popper.js@1.16.1,npm/bootstrap@4/dist/js/bootstrap.min.js"></script> <script defer src="/app.js"></script> <script defer src="https://www.googletagmanager.com/gtag/js?id="></script> <script> document.addEventListener("DOMContentLoaded", function(event) { window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', ''); }); </script>
